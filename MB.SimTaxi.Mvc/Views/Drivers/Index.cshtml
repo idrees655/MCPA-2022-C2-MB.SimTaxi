@@ -1,0 +1,41 @@
+﻿@model IEnumerable<MB.SimTaxi.Entities.Driver>
+
+@{
+    ViewData["Title"] = "Drivers";
+}
+
+<h1>Drivers</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var driver in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => driver.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => driver.LastName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@driver.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@driver.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@driver.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
