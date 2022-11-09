@@ -48,11 +48,6 @@ namespace MB.SimTaxi.Mvc.Controllers
         // GET: Drivers/Create
         public IActionResult Create()
         {
-            Car car = new Car();
-            car.Color = "Pink";
-            car.DriverId = driverId;
-
-
             return View();
         }
 
