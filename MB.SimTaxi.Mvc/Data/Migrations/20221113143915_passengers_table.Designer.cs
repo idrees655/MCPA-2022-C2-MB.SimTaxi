@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MB.SimTaxi.Mvc.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221110150711_passengers_tables")]
-    partial class passengers_tables
+    [Migration("20221113143915_passengers_table")]
+    partial class passengers_table
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

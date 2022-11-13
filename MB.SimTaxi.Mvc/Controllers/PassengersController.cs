@@ -10,95 +10,85 @@ using MB.SimTaxi.Mvc.Data;
 
 namespace MB.SimTaxi.Mvc.Controllers
 {
-    public class CarsController : Controller
+    public class PassengersController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public CarsController(ApplicationDbContext context)
+        public PassengersController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Cars
+        // GET: Passengers
         public async Task<IActionResult> Index()
         {
-            List<Car> cars = _context
-                                .Cars
-                                .Include(car => car.Driver)
-                                .Include(car => car.Bookings)
-                                .ToList();
-
-            return View(cars);  
+              return View(await _context.Passengers.ToListAsync());
         }
 
-        // GET: Cars/Details/5
+        // GET: Passengers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Cars == null)
+            if (id == null || _context.Passengers == null)
             {
                 return NotFound();
             }
 
-            var car = await _context.Cars
-                .Include(c => c.Driver)
+            var passenger = await _context.Passengers
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (car == null)
+            if (passenger == null)
             {
                 return NotFound();
             }
 
-            return View(car);
+            return View(passenger);
         }
 
-        // GET: Cars/Create
+        // GET: Passengers/Create
         public IActionResult Create()
         {
-            ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName");
             return View();
         }
 
-        // POST: Cars/Create
+        // POST: Passengers/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,PlateNumber,Model,Color,DriverId")] Car car)
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,MobileNumber,DateOfBirth")] Passenger passenger)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(car);
+                _context.Add(passenger);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", car.DriverId);
-            return View(car);
+            return View(passenger);
         }
 
-        // GET: Cars/Edit/5
+        // GET: Passengers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Cars == null)
+            if (id == null || _context.Passengers == null)
             {
                 return NotFound();
             }
 
-            var car = await _context.Cars.FindAsync(id);
-            if (car == null)
+            var passenger = await _context.Passengers.FindAsync(id);
+            if (passenger == null)
             {
                 return NotFound();
             }
-            ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", car.DriverId);
-            return View(car);
+            return View(passenger);
         }
 
-        // POST: Cars/Edit/5
+        // POST: Passengers/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,PlateNumber,Model,Color,DriverId")] Car car)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,MobileNumber,DateOfBirth")] Passenger passenger)
         {
-            if (id != car.Id)
+            if (id != passenger.Id)
             {
                 return NotFound();
             }
@@ -107,12 +97,12 @@ namespace MB.SimTaxi.Mvc.Controllers
             {
                 try
                 {
-                    _context.Update(car);
+                    _context.Update(passenger);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CarExists(car.Id))
+                    if (!PassengerExists(passenger.Id))
                     {
                         return NotFound();
                     }
@@ -123,51 +113,49 @@ namespace MB.SimTaxi.Mvc.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", car.DriverId);
-            return View(car);
+            return View(passenger);
         }
 
-        // GET: Cars/Delete/5
+        // GET: Passengers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Cars == null)
+            if (id == null || _context.Passengers == null)
             {
                 return NotFound();
             }
 
-            var car = await _context.Cars
-                .Include(c => c.Driver)
+            var passenger = await _context.Passengers
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (car == null)
+            if (passenger == null)
             {
                 return NotFound();
             }
 
-            return View(car);
+            return View(passenger);
         }
 
-        // POST: Cars/Delete/5
+        // POST: Passengers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Cars == null)
+            if (_context.Passengers == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Cars'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Passengers'  is null.");
             }
-            var car = await _context.Cars.FindAsync(id);
-            if (car != null)
+            var passenger = await _context.Passengers.FindAsync(id);
+            if (passenger != null)
             {
-                _context.Cars.Remove(car);
+                _context.Passengers.Remove(passenger);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CarExists(int id)
+        private bool PassengerExists(int id)
         {
-          return _context.Cars.Any(e => e.Id == id);
+          return _context.Passengers.Any(e => e.Id == id);
         }
     }
 }

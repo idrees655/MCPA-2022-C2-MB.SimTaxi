@@ -10,95 +10,94 @@ using MB.SimTaxi.Mvc.Data;
 
 namespace MB.SimTaxi.Mvc.Controllers
 {
-    public class CarsController : Controller
+    public class BookingsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public CarsController(ApplicationDbContext context)
+        public BookingsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Cars
+        // GET: Bookings
         public async Task<IActionResult> Index()
         {
-            List<Car> cars = _context
-                                .Cars
-                                .Include(car => car.Driver)
-                                .Include(car => car.Bookings)
-                                .ToList();
-
-            return View(cars);  
+            var applicationDbContext = _context.Bookings.Include(b => b.Car).Include(b => b.Driver);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Cars/Details/5
+        // GET: Bookings/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Cars == null)
+            if (id == null || _context.Bookings == null)
             {
                 return NotFound();
             }
 
-            var car = await _context.Cars
-                .Include(c => c.Driver)
+            var booking = await _context.Bookings
+                .Include(b => b.Car)
+                .Include(b => b.Driver)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (car == null)
+            if (booking == null)
             {
                 return NotFound();
             }
 
-            return View(car);
+            return View(booking);
         }
 
-        // GET: Cars/Create
+        // GET: Bookings/Create
         public IActionResult Create()
         {
+            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Model");
             ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName");
             return View();
         }
 
-        // POST: Cars/Create
+        // POST: Bookings/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,PlateNumber,Model,Color,DriverId")] Car car)
+        public async Task<IActionResult> Create([Bind("Id,DriverId,CarId")] Booking booking)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(car);
+                _context.Add(booking);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", car.DriverId);
-            return View(car);
+            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Color", booking.CarId);
+            ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", booking.DriverId);
+            return View(booking);
         }
 
-        // GET: Cars/Edit/5
+        // GET: Bookings/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Cars == null)
+            if (id == null || _context.Bookings == null)
             {
                 return NotFound();
             }
 
-            var car = await _context.Cars.FindAsync(id);
-            if (car == null)
+            var booking = await _context.Bookings.FindAsync(id);
+            if (booking == null)
             {
                 return NotFound();
             }
-            ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", car.DriverId);
-            return View(car);
+            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Color", booking.CarId);
+            ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", booking.DriverId);
+            return View(booking);
         }
 
-        // POST: Cars/Edit/5
+        // POST: Bookings/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,PlateNumber,Model,Color,DriverId")] Car car)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DriverId,CarId")] Booking booking)
         {
-            if (id != car.Id)
+            if (id != booking.Id)
             {
                 return NotFound();
             }
@@ -107,12 +106,12 @@ namespace MB.SimTaxi.Mvc.Controllers
             {
                 try
                 {
-                    _context.Update(car);
+                    _context.Update(booking);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CarExists(car.Id))
+                    if (!BookingExists(booking.Id))
                     {
                         return NotFound();
                     }
@@ -123,51 +122,53 @@ namespace MB.SimTaxi.Mvc.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", car.DriverId);
-            return View(car);
+            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Color", booking.CarId);
+            ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", booking.DriverId);
+            return View(booking);
         }
 
-        // GET: Cars/Delete/5
+        // GET: Bookings/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Cars == null)
+            if (id == null || _context.Bookings == null)
             {
                 return NotFound();
             }
 
-            var car = await _context.Cars
-                .Include(c => c.Driver)
+            var booking = await _context.Bookings
+                .Include(b => b.Car)
+                .Include(b => b.Driver)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (car == null)
+            if (booking == null)
             {
                 return NotFound();
             }
 
-            return View(car);
+            return View(booking);
         }
 
-        // POST: Cars/Delete/5
+        // POST: Bookings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Cars == null)
+            if (_context.Bookings == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Cars'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Bookings'  is null.");
             }
-            var car = await _context.Cars.FindAsync(id);
-            if (car != null)
+            var booking = await _context.Bookings.FindAsync(id);
+            if (booking != null)
             {
-                _context.Cars.Remove(car);
+                _context.Bookings.Remove(booking);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CarExists(int id)
+        private bool BookingExists(int id)
         {
-          return _context.Cars.Any(e => e.Id == id);
+          return _context.Bookings.Any(e => e.Id == id);
         }
     }
 }

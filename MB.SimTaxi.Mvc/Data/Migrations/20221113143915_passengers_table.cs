@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MB.SimTaxi.Mvc.Data.Migrations
 {
-    public partial class passengers_tables : Migration
+    public partial class passengers_table : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
