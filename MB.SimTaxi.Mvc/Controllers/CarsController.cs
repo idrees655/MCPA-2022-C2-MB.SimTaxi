@@ -25,7 +25,6 @@ namespace MB.SimTaxi.Mvc.Controllers
             List<Car> cars = _context
                                 .Cars
                                 .Include(car => car.Driver)
-                                .Include(car => car.Bookings)
                                 .ToList();
 
             return View(cars);  
@@ -34,14 +33,14 @@ namespace MB.SimTaxi.Mvc.Controllers
         // GET: Cars/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Cars == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
             var car = await _context.Cars
-                .Include(c => c.Driver)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                                    .Include(c => c.Driver)
+                                    .FirstOrDefaultAsync(m => m.Id == id);
             if (car == null)
             {
                 return NotFound();

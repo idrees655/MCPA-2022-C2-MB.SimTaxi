@@ -32,7 +32,8 @@
             @Html.DisplayNameFor(model => model.Driver)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Driver.FirstName)
+            <span>@Model.Driver.FirstName</span>
+            <span>@Model.Driver.LastName</span>
         </dd>
     </dl>
 </div>
