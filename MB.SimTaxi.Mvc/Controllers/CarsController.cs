@@ -27,7 +27,7 @@ namespace MB.SimTaxi.Mvc.Controllers
                                 .Include(car => car.Driver)
                                 .ToList();
 
-            return View(cars);  
+            return View(cars);
         }
 
         // GET: Cars/Details/5
@@ -61,7 +61,7 @@ namespace MB.SimTaxi.Mvc.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,PlateNumber,Model,Color,DriverId")] Car car)
+        public async Task<IActionResult> Create(Car car)
         {
             if (ModelState.IsValid)
             {
@@ -76,16 +76,18 @@ namespace MB.SimTaxi.Mvc.Controllers
         // GET: Cars/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Cars == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
             var car = await _context.Cars.FindAsync(id);
+
             if (car == null)
             {
                 return NotFound();
             }
+
             ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", car.DriverId);
             return View(car);
         }
@@ -95,7 +97,7 @@ namespace MB.SimTaxi.Mvc.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,PlateNumber,Model,Color,DriverId")] Car car)
+        public async Task<IActionResult> Edit(int id, Car car)
         {
             if (id != car.Id)
             {
@@ -104,24 +106,11 @@ namespace MB.SimTaxi.Mvc.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(car);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CarExists(car.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _context.Update(car);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", car.DriverId);
             return View(car);
         }
@@ -129,14 +118,15 @@ namespace MB.SimTaxi.Mvc.Controllers
         // GET: Cars/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Cars == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
             var car = await _context.Cars
-                .Include(c => c.Driver)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                                    .Include(c => c.Driver)
+                                    .FirstOrDefaultAsync(m => m.Id == id);
+           
             if (car == null)
             {
                 return NotFound();
@@ -150,23 +140,21 @@ namespace MB.SimTaxi.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Cars == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Cars'  is null.");
-            }
             var car = await _context.Cars.FindAsync(id);
+
             if (car != null)
             {
                 _context.Cars.Remove(car);
             }
-            
+
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
         private bool CarExists(int id)
         {
-          return _context.Cars.Any(e => e.Id == id);
+            return _context.Cars.Any(e => e.Id == id);
         }
     }
 }
