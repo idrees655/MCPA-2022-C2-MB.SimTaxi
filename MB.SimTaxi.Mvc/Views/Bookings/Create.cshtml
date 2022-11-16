@@ -1,26 +1,52 @@
 ﻿@model MB.SimTaxi.Entities.Booking
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create new booking";
 }
 
-<h1>Create</h1>
+<h1>Create a new booking</h1>
 
-<h4>Booking</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
-                <label asp-for="DriverId" class="control-label"></label>
+                <label asp-for="PickupTime" class="control-label"></label>
+                <input class="form-control" asp-for="PickupTime" />
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="FromAddress" class="control-label"></label>
+                <input class="form-control" asp-for="FromAddress" />
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="ToAddress" class="control-label"></label>
+                <input class="form-control" asp-for="ToAddress" />
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="Price" class="control-label"></label>
+                <input class="form-control" asp-for="Price" />
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="IsPaid" class="control-label"></label>
+                <input class="form-control" asp-for="IsPaid" />
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Driver Name</label>
                 <select asp-for="DriverId" class ="form-control" asp-items="ViewBag.DriverId"></select>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-3">
                 <label asp-for="CarId" class="control-label">Car Model</label>
                 <select asp-for="CarId" class ="form-control" asp-items="ViewBag.CarId"></select>
             </div>
-            <div class="form-group">
+
+            <div class="form-group mt-3">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
