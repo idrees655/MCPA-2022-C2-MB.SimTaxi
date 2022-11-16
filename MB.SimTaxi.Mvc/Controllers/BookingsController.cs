@@ -59,7 +59,7 @@ namespace MB.SimTaxi.Mvc.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DriverId,CarId")] Booking booking)
+        public async Task<IActionResult> Create([Bind("Id,FromAddress,ToAddress,PickupTime,Price,IsPaid,DriverId,CarId")] Booking booking)
         {
             if (ModelState.IsValid)
             {
@@ -95,7 +95,7 @@ namespace MB.SimTaxi.Mvc.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DriverId,CarId")] Booking booking)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FromAddress,ToAddress,PickupTime,Price,IsPaid,DriverId,CarId")] Booking booking)
         {
             if (id != booking.Id)
             {

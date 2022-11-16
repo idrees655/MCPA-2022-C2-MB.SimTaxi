@@ -1,17 +1,32 @@
 ﻿@model IEnumerable<MB.SimTaxi.Entities.Booking>
 
 @{
-    ViewData["Title"] = "Bookings";
+    ViewData["Title"] = "Index";
 }
 
-<h1>Bookings</h1>
+<h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New Booking</a>
+    <a asp-action="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FromAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ToAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PickupTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsPaid)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Driver)
             </th>
@@ -24,6 +39,21 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FromAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ToAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PickupTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsPaid)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Driver.FirstName)
             </td>
