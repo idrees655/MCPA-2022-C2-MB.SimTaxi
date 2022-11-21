@@ -1,22 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MB.SimTaxi.Entities;
 using MB.SimTaxi.Mvc.Data;
+using AutoMapper;
+using MB.SimTaxi.Mvc.Models.Cars;
 
 namespace MB.SimTaxi.Mvc.Controllers
 {
     public class CarsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public CarsController(ApplicationDbContext context)
+        public CarsController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            this._mapper = mapper;
         }
 
         // GET: Cars
@@ -27,7 +27,10 @@ namespace MB.SimTaxi.Mvc.Controllers
                                 .Include(car => car.Driver)
                                 .ToList();
 
-            return View(cars);
+            // TODO convert the List<Car> into List<CarViewModel> then send it to the view
+            List<CarViewModel> carVMs = _mapper.Map<List<CarViewModel>>(cars);
+
+            return View(carVMs);
         }
 
         // GET: Cars/Details/5

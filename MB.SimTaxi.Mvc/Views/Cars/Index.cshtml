@@ -1,4 +1,5 @@
-﻿@model IEnumerable<MB.SimTaxi.Entities.Car>
+﻿@using MB.SimTaxi.Mvc.Models.Cars;
+@model IEnumerable<CarViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -41,8 +42,8 @@
                     @Html.DisplayFor(modelItem => car.Color)
                 </td>
                 <td>
-                    <span>@car.Driver.FirstName</span>
-                    <span>@car.Driver.LastName</span>
+                    <span>@car.DriverFirstName</span>
+                    <span>@car.DriverLastName</span>
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@car.Id">Edit</a> |
