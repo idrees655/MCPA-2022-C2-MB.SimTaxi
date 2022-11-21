@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MB.SimTaxi.Entities;
@@ -12,6 +8,8 @@ namespace MB.SimTaxi.Mvc.Controllers
 {
     public class BookingsController : Controller
     {
+        #region Data and Constructors
+
         private readonly ApplicationDbContext _context;
 
         public BookingsController(ApplicationDbContext context)
@@ -19,14 +17,20 @@ namespace MB.SimTaxi.Mvc.Controllers
             _context = context;
         }
 
-        // GET: Bookings
+        #endregion
+
+        #region Actions
+
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Bookings.Include(b => b.Car).Include(b => b.Driver);
-            return View(await applicationDbContext.ToListAsync());
+            List<Booking> bookings = _context.Bookings
+                                                .Include(b => b.Car)
+                                                .Include(b => b.Driver)
+                                                .ToList();
+
+            return View(bookings);
         }
 
-        // GET: Bookings/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Bookings == null)
@@ -46,7 +50,6 @@ namespace MB.SimTaxi.Mvc.Controllers
             return View(booking);
         }
 
-        // GET: Bookings/Create
         public IActionResult Create()
         {
             ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Model");
@@ -54,12 +57,9 @@ namespace MB.SimTaxi.Mvc.Controllers
             return View();
         }
 
-        // POST: Bookings/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FromAddress,ToAddress,PickupTime,Price,IsPaid,DriverId,CarId")] Booking booking)
+        public async Task<IActionResult> Create(Booking booking)
         {
             if (ModelState.IsValid)
             {
@@ -67,12 +67,13 @@ namespace MB.SimTaxi.Mvc.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Color", booking.CarId);
+
+            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Model", booking.CarId);
             ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", booking.DriverId);
+
             return View(booking);
         }
 
-        // GET: Bookings/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Bookings == null)
@@ -85,17 +86,14 @@ namespace MB.SimTaxi.Mvc.Controllers
             {
                 return NotFound();
             }
-            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Color", booking.CarId);
+            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Model", booking.CarId);
             ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", booking.DriverId);
             return View(booking);
         }
 
-        // POST: Bookings/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FromAddress,ToAddress,PickupTime,Price,IsPaid,DriverId,CarId")] Booking booking)
+        public async Task<IActionResult> Edit(int id, Booking booking)
         {
             if (id != booking.Id)
             {
@@ -122,12 +120,11 @@ namespace MB.SimTaxi.Mvc.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Color", booking.CarId);
+            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Model", booking.CarId);
             ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", booking.DriverId);
             return View(booking);
         }
 
-        // GET: Bookings/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Bookings == null)
@@ -147,7 +144,6 @@ namespace MB.SimTaxi.Mvc.Controllers
             return View(booking);
         }
 
-        // POST: Bookings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -166,9 +162,14 @@ namespace MB.SimTaxi.Mvc.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        #endregion
+
+        #region Private Methods
+
         private bool BookingExists(int id)
         {
-          return _context.Bookings.Any(e => e.Id == id);
-        }
+            return _context.Bookings.Any(e => e.Id == id);
+        } 
+        #endregion
     }
 }
