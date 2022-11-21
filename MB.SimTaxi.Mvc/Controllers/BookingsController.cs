@@ -52,6 +52,7 @@ namespace MB.SimTaxi.Mvc.Controllers
 
         public IActionResult Create()
         {
+            ViewData["Passengers"] = new MultiSelectList(_context.Passengers, "Id", "FirstName");
             ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Model");
             ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName");
             return View();
