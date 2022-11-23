@@ -2,7 +2,7 @@
 @model IEnumerable<CarViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Cars";
 }
 
 <h1>Cars</h1>
@@ -23,9 +23,9 @@
                 @Html.DisplayNameFor(model => model.Color)
             </th>
             <th>
-                Driver
+                Driver Name
             </th>
-            <th></th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -46,9 +46,15 @@
                     <span>@car.DriverLastName</span>
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@car.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@car.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@car.Id">Delete</a>
+                    <a class="text-info me-2 text-decoration-none" asp-action="Edit" asp-route-id="@car.Id" title="Edit">
+                        <i class="fa-solid fa-pencil"></i>
+                    </a>
+                    <a class="text-successful me-2  text-decoration-none" asp-action="Details" asp-route-id="@car.Id" title="Details">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </a>
+                    <a class="text-danger text-decoration-none" asp-action="Delete" asp-route-id="@car.Id" title="Delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
                 </td>
             </tr>
         }
