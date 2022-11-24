@@ -14,7 +14,7 @@
 
 
         public int? DriverId { get; set; }
-        public Driver? Driver { get; set; }
+        public Driver Driver { get; set; }
 
         public List<Booking> Bookings { get; set; }
     }

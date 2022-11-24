@@ -10,16 +10,21 @@ namespace MB.SimTaxi.Mvc.Controllers
 {
     public class CarsController : Controller
     {
+        #region Data and Const
+
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
 
         public CarsController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
-            this._mapper = mapper;
+            _mapper = mapper;
         }
 
-        // GET: Cars
+        #endregion
+
+        #region Actions
+
         public async Task<IActionResult> Index()
         {
             List<Car> cars = _context
@@ -27,13 +32,11 @@ namespace MB.SimTaxi.Mvc.Controllers
                                 .Include(car => car.Driver)
                                 .ToList();
 
-            // TODO convert the List<Car> into List<CarViewModel> then send it to the view
-            List<CarViewModel> carVMs = _mapper.Map<List<CarViewModel>>(cars);
+            List<CarTableDetailsViewModel> carVMs = _mapper.Map<List<CarTableDetailsViewModel>>(cars);
 
             return View(carVMs);
         }
 
-        // GET: Cars/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -44,39 +47,40 @@ namespace MB.SimTaxi.Mvc.Controllers
             var car = await _context.Cars
                                     .Include(c => c.Driver)
                                     .FirstOrDefaultAsync(m => m.Id == id);
+
             if (car == null)
             {
                 return NotFound();
             }
 
-            return View(car);
+            CarTableDetailsViewModel carVM = _mapper.Map<CarTableDetailsViewModel>(car);
+
+            return View(carVM);
         }
 
-        // GET: Cars/Create
         public IActionResult Create()
         {
             ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName");
             return View();
         }
 
-        // POST: Cars/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Car car)
+        public async Task<IActionResult> Create(CarCreateEditViewModel carVM)
         {
             if (ModelState.IsValid)
             {
+                Car car = _mapper.Map<Car>(carVM);
+
                 _context.Add(car);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", car.DriverId);
-            return View(car);
+            ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", carVM.DriverId);
+            return View(carVM);
         }
 
-        // GET: Cars/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -92,33 +96,34 @@ namespace MB.SimTaxi.Mvc.Controllers
             }
 
             ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", car.DriverId);
-            return View(car);
+
+            CarCreateEditViewModel carVM = _mapper.Map<CarCreateEditViewModel>(car);
+
+            return View(carVM);
         }
 
-        // POST: Cars/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Car car)
+        public async Task<IActionResult> Edit(int id, CarCreateEditViewModel carVM)
         {
-            if (id != car.Id)
+            if (id != carVM.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
+                var car = _mapper.Map<Car>(carVM);
+
                 _context.Update(car);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", car.DriverId);
-            return View(car);
+            ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", carVM.DriverId);
+            return View(carVM);
         }
 
-        // GET: Cars/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -129,16 +134,17 @@ namespace MB.SimTaxi.Mvc.Controllers
             var car = await _context.Cars
                                     .Include(c => c.Driver)
                                     .FirstOrDefaultAsync(m => m.Id == id);
-           
+
             if (car == null)
             {
                 return NotFound();
             }
 
-            return View(car);
+            CarTableDetailsViewModel carVM = _mapper.Map<CarTableDetailsViewModel>(car);
+
+            return View(carVM);
         }
 
-        // POST: Cars/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -155,9 +161,15 @@ namespace MB.SimTaxi.Mvc.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        #endregion
+
+        #region Private
+
         private bool CarExists(int id)
         {
             return _context.Cars.Any(e => e.Id == id);
-        }
+        } 
+
+        #endregion
     }
 }
