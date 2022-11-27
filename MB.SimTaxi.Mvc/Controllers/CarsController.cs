@@ -124,27 +124,6 @@ namespace MB.SimTaxi.Mvc.Controllers
             return View(carVM);
         }
 
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var car = await _context.Cars
-                                    .Include(c => c.Driver)
-                                    .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (car == null)
-            {
-                return NotFound();
-            }
-
-            CarTableDetailsViewModel carVM = _mapper.Map<CarTableDetailsViewModel>(car);
-
-            return View(carVM);
-        }
-
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
