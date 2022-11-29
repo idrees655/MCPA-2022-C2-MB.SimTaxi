@@ -20,5 +20,13 @@ namespace MB.SimTaxi.Mvc.Models.Cars
         public string DriverLastName { get; set; }
 
         public int DriverId { get; set; }
+
+        public string FullName
+        {
+            get
+            {
+                return $"{DriverFirstName} {DriverLastName}";
+            }
+        }
     }
 }

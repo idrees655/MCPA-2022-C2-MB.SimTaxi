@@ -1,4 +1,6 @@
-﻿namespace MB.SimTaxi.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace MB.SimTaxi.Entities
 {
     public class Driver
     {
@@ -16,5 +18,14 @@
         public List<Car> Cars { get; set; }
 
         public List<Booking> Bookings { get; set; }
+
+        [NotMapped]
+        public string FullName
+        {
+            get
+            {
+                return $"{FirstName} {LastName}";
+            }
+        }
     }
 }

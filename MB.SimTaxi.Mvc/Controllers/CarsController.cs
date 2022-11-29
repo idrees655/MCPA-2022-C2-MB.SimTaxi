@@ -60,8 +60,10 @@ namespace MB.SimTaxi.Mvc.Controllers
 
         public IActionResult Create()
         {
-            ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName");
-            return View();
+            var carVM = new CarCreateEditViewModel();
+            carVM.SelectListDriver = new SelectList(_context.Drivers, "Id", "FullName");
+            
+            return View(carVM);
         }
 
         [HttpPost]

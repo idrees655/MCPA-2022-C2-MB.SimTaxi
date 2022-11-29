@@ -34,7 +34,7 @@ namespace MB.SimTaxi.Mvc.Data.Migrations
 
                     b.HasIndex("PassengersId");
 
-                    b.ToTable("BookingPassenger");
+                    b.ToTable("BookingPassenger", (string)null);
                 });
 
             modelBuilder.Entity("MB.SimTaxi.Entities.Booking", b =>
@@ -74,7 +74,7 @@ namespace MB.SimTaxi.Mvc.Data.Migrations
 
                     b.HasIndex("DriverId");
 
-                    b.ToTable("Bookings");
+                    b.ToTable("Bookings", (string)null);
                 });
 
             modelBuilder.Entity("MB.SimTaxi.Entities.Car", b =>
@@ -104,7 +104,7 @@ namespace MB.SimTaxi.Mvc.Data.Migrations
 
                     b.HasIndex("DriverId");
 
-                    b.ToTable("Cars");
+                    b.ToTable("Cars", (string)null);
                 });
 
             modelBuilder.Entity("MB.SimTaxi.Entities.Driver", b =>
@@ -128,7 +128,7 @@ namespace MB.SimTaxi.Mvc.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Drivers");
+                    b.ToTable("Drivers", (string)null);
                 });
 
             modelBuilder.Entity("MB.SimTaxi.Entities.Passenger", b =>
@@ -156,7 +156,7 @@ namespace MB.SimTaxi.Mvc.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Passengers");
+                    b.ToTable("Passengers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace MB.SimTaxi.Mvc.Models.Cars
 {
@@ -6,15 +7,12 @@ namespace MB.SimTaxi.Mvc.Models.Cars
     {
         public int Id { get; set; }
 
-        [StringLength(16, MinimumLength = 3)]
-        [Required(ErrorMessage = "الحقل مطلوب يا كبير")]
         [Display(Name = "Plate Number")]
         public string PlateNumber { get; set; }
-
         public string Model { get; set; }
-
         public string Color { get; set; }
-
         public int DriverId { get; set; }
+
+        public SelectList SelectListDriver { get; set; }        
     }
 }
