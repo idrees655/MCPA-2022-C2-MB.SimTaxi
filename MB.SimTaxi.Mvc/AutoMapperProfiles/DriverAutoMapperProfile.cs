@@ -8,7 +8,8 @@ namespace MB.SimTaxi.Mvc.AutoMapperProfiles
     {
         public DriverAutoMapperProfile()
         {
-            CreateMap<Driver, DriverViewModel>().ReverseMap();
+            CreateMap<Driver, DriverViewModel>();
+            CreateMap<DriverCreateEditViewModel, Driver>().ReverseMap();
         }
     }
 }

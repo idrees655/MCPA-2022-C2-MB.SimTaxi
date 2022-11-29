@@ -57,15 +57,18 @@ namespace MB.SimTaxi.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName")] Driver driver)
+        public async Task<IActionResult> Create(DriverCreateEditViewModel driverVM)
         {
             if (ModelState.IsValid)
             {
+                var driver = _mapper.Map<Driver>(driverVM);
+
                 _context.Add(driver);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(driver);
+            return View(driverVM);
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -76,18 +79,22 @@ namespace MB.SimTaxi.Mvc.Controllers
             }
 
             var driver = await _context.Drivers.FindAsync(id);
+
             if (driver == null)
             {
                 return NotFound();
             }
-            return View(driver);
+
+            var driverVM = _mapper.Map<DriverCreateEditViewModel>(driver);
+
+            return View(driverVM);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName")] Driver driver)
+        public async Task<IActionResult> Edit(int id, DriverCreateEditViewModel driverVM)
         {
-            if (id != driver.Id)
+            if (id != driverVM.Id)
             {
                 return NotFound();
             }
@@ -96,12 +103,14 @@ namespace MB.SimTaxi.Mvc.Controllers
             {
                 try
                 {
+                    var driver = _mapper.Map<Driver>(driverVM);
+
                     _context.Update(driver);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DriverExists(driver.Id))
+                    if (!DriverExists(driverVM.Id))
                     {
                         return NotFound();
                     }
@@ -112,7 +121,7 @@ namespace MB.SimTaxi.Mvc.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(driver);
+            return View(driverVM);
         }
 
         public async Task<IActionResult> Delete(int? id)

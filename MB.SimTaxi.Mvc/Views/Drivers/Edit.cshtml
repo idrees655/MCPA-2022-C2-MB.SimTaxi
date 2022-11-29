@@ -1,37 +1,41 @@
-﻿@model MB.SimTaxi.Entities.Driver
+﻿@using MB.SimTaxi.Mvc.Models.Drivers;
+@model DriverCreateEditViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = $"Edit - {@Model.FullName}";
 }
 
-<h1>Edit</h1>
-
-<h4>Driver</h4>
+<h4>Edit <span class="text-primary">@Model.FullName</span></h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
                 <input asp-for="FirstName" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-3">
                 <label asp-for="LastName" class="control-label"></label>
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <div class="form-group mt-3">
+                <label asp-for="DateOfBirth" class="control-label"></label>
+                <input asp-for="DateOfBirth" class="form-control" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-4">
+                <a class="btn btn-secondary" asp-action="Index">Cancel</a>
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
+
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
