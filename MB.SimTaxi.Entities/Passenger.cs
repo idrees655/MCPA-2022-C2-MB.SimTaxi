@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using MB.SimTaxi.Utils.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MB.SimTaxi.Entities
 {
@@ -14,7 +15,7 @@ namespace MB.SimTaxi.Entities
         public string LastName { get; set; }
         public string MobileNumber { get; set; }
         public DateTime DateOfBirth { get; set; }
-        //public Gender Gender { get; set; }
+        public Gender Gender { get; set; }
 
         public List<Booking> Bookings { get; set; }
 

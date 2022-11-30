@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\MB.SimTaxi.Utils\MB.SimTaxi.Utils.csproj" />
-  </ItemGroup>
-
 </Project>

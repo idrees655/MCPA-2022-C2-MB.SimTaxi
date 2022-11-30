@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MB.SimTaxi.Mvc", "MB.SimTaxi.Mvc\MB.SimTaxi.Mvc.csproj", "{B0EE74AC-6B19-4ADD-959C-468CD42854A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MB.SimTaxi.Mvc", "MB.SimTaxi.Mvc\MB.SimTaxi.Mvc.csproj", "{B0EE74AC-6B19-4ADD-959C-468CD42854A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MB.SimTaxi.Entities", "MB.SimTaxi.Entities\MB.SimTaxi.Entities.csproj", "{76D09FAB-CAD9-479B-B8E8-66920BC93045}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MB.SimTaxi.Entities", "MB.SimTaxi.Entities\MB.SimTaxi.Entities.csproj", "{76D09FAB-CAD9-479B-B8E8-66920BC93045}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MB.SimTaxi.Utils", "MB.SimTaxi.Utils\MB.SimTaxi.Utils.csproj", "{EACD27E5-4806-419A-A616-3BB87378066D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{76D09FAB-CAD9-479B-B8E8-66920BC93045}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76D09FAB-CAD9-479B-B8E8-66920BC93045}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76D09FAB-CAD9-479B-B8E8-66920BC93045}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EACD27E5-4806-419A-A616-3BB87378066D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EACD27E5-4806-419A-A616-3BB87378066D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EACD27E5-4806-419A-A616-3BB87378066D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EACD27E5-4806-419A-A616-3BB87378066D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

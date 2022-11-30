@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MB.SimTaxi.Entities;
 using MB.SimTaxi.Mvc.Data;
+using AutoMapper;
 
 namespace MB.SimTaxi.Mvc.Controllers
 {
@@ -10,10 +11,12 @@ namespace MB.SimTaxi.Mvc.Controllers
         #region Data and Constructors
 
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public PassengersController(ApplicationDbContext context)
+        public PassengersController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         #endregion
@@ -23,6 +26,9 @@ namespace MB.SimTaxi.Mvc.Controllers
         public async Task<IActionResult> Index()
         {
             List<Passenger> passengers = await _context.Passengers.ToListAsync();
+
+
+
             return View(passengers);
         }
 

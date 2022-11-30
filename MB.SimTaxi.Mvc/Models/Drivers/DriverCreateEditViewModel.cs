@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MB.SimTaxi.Utils.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 
 namespace MB.SimTaxi.Mvc.Models.Drivers
@@ -18,6 +19,8 @@ namespace MB.SimTaxi.Mvc.Models.Drivers
 
         [Display(Name = "Date of birth")]
         public DateTime? DateOfBirth { get; set; }
+
+        public Gender Gender { get; set; }
 
         public string FullName
         {

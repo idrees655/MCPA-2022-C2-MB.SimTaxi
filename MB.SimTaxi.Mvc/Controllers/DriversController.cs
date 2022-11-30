@@ -40,14 +40,18 @@ namespace MB.SimTaxi.Mvc.Controllers
                 return NotFound();
             }
 
-            var driver = await _context.Drivers
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var driver = await _context
+                                    .Drivers
+                                    .FirstOrDefaultAsync(m => m.Id == id);
+
             if (driver == null)
             {
                 return NotFound();
             }
 
-            return View(driver);
+            var driverVM = _mapper.Map<DriverViewModel>(driver);
+
+            return View(driverVM);
         }
 
         public IActionResult Create()

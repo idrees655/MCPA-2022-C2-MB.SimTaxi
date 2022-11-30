@@ -1,4 +1,5 @@
 ﻿@using MB.SimTaxi.Mvc.Models.Drivers;
+@using MB.SimTaxi.Utils.Enums;
 @model DriverCreateEditViewModel
 
 @{
@@ -20,6 +21,11 @@
                 <label asp-for="LastName" class="control-label"></label>
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label class="control-label">Gender</label>
+                <select asp-for="Gender" class="form-control" asp-items="@Html.GetEnumSelectList<Gender>()"></select>
             </div>
 
             <div class="form-group mt-3">
