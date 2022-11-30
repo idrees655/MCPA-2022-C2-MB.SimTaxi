@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 namespace MB.SimTaxi.Mvc.Models.Cars
@@ -13,6 +14,8 @@ namespace MB.SimTaxi.Mvc.Models.Cars
         public string Color { get; set; }
         public int DriverId { get; set; }
 
+
+        [ValidateNever]
         public SelectList SelectListDriver { get; set; }        
     }
 }

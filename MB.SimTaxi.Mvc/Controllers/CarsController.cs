@@ -61,6 +61,7 @@ namespace MB.SimTaxi.Mvc.Controllers
         public IActionResult Create()
         {
             var carVM = new CarCreateEditViewModel();
+            
             carVM.SelectListDriver = new SelectList(_context.Drivers, "Id", "FullName");
             
             return View(carVM);
@@ -79,7 +80,8 @@ namespace MB.SimTaxi.Mvc.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", carVM.DriverId);
+
+            carVM.SelectListDriver = new SelectList(_context.Drivers, "Id", "FullName", carVM.DriverId);
             return View(carVM);
         }
 
@@ -97,9 +99,8 @@ namespace MB.SimTaxi.Mvc.Controllers
                 return NotFound();
             }
 
-            ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", car.DriverId);
-
             CarCreateEditViewModel carVM = _mapper.Map<CarCreateEditViewModel>(car);
+            carVM.SelectListDriver = new SelectList(_context.Drivers, "Id", "FullName", car.DriverId);
 
             return View(carVM);
         }
@@ -122,7 +123,7 @@ namespace MB.SimTaxi.Mvc.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", carVM.DriverId);
+            carVM.SelectListDriver = new SelectList(_context.Drivers, "Id", "FullName", carVM.DriverId);
             return View(carVM);
         }
 
