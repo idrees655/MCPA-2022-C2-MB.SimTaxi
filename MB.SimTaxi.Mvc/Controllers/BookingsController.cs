@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MB.SimTaxi.Entities;
 using MB.SimTaxi.Mvc.Data;
+using AutoMapper;
+using MB.SimTaxi.Mvc.Models.Bookings;
 
 namespace MB.SimTaxi.Mvc.Controllers
 {
@@ -11,10 +13,12 @@ namespace MB.SimTaxi.Mvc.Controllers
         #region Data and Constructors
 
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public BookingsController(ApplicationDbContext context)
+        public BookingsController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         #endregion
@@ -23,12 +27,14 @@ namespace MB.SimTaxi.Mvc.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<Booking> bookings = _context.Bookings
+            var bookings = _context.Bookings
                                                 .Include(b => b.Car)
                                                 .Include(b => b.Driver)
                                                 .ToList();
 
-            return View(bookings);
+            var bookingVMs = _mapper.Map<List<BookingViewModel>>(bookings);
+
+            return View(bookingVMs);
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -52,10 +58,13 @@ namespace MB.SimTaxi.Mvc.Controllers
 
         public IActionResult Create()
         {
-            ViewData["Passengers"] = new MultiSelectList(_context.Passengers, "Id", "FirstName");
-            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Model");
-            ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName");
-            return View();
+            var bookingVM = new BookingViewModel();
+
+            bookingVM.SelectListDrivers = new SelectList(_context.Drivers, "Id", "FirstName");
+            bookingVM.SelectListCars = new SelectList(_context.Cars, "Id", "CarFullName");
+            bookingVM.MultiSelectPassengers = new MultiSelectList(_context.Passengers, "Id", "FirstName");
+
+            return View(bookingVM);
         }
 
         [HttpPost]
