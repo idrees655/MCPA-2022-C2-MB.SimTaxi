@@ -1,13 +1,14 @@
-﻿@model IEnumerable<MB.SimTaxi.Entities.Passenger>
+﻿@using MB.SimTaxi.Mvc.Models.Passengers;
+@model IEnumerable<PassengerViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Passengers";
 }
 
-<h1>Index</h1>
+<h1>Passengers</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Create New Passenger</a>
 </p>
 <table class="table data-table">
     <thead>
@@ -28,26 +29,55 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MobileNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateOfBirth)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var passenger in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => passenger.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => passenger.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => passenger.MobileNumber)
+                </td>
+                <td>
+                    @passenger.DateOfBirth.ToLongDateString()
+                </td>
+                <td>
+                    <a class="text-info me-2 text-decoration-none" asp-action="Edit" asp-route-id="@passenger.Id" title="Edit">
+                        <i class="fa-solid fa-pencil"></i>
+                    </a>
+                    <a class="text-successful me-2  text-decoration-none" asp-action="Details" asp-route-id="@passenger.Id" title="Details">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </a>
+                    <a class="text-danger text-decoration-none pointer" title="Delete" data-bs-toggle="modal" data-bs-target="#passengerDeleteModal_@passenger.Id">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+
+                    @* Delete Modal *@
+                    <div class="modal fade" id="passengerDeleteModal_@passenger.Id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Delete Passenger</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <h3>Are you sure you want to delete <span class="text-danger">@passenger.FullName</span>?</h3>
+                                </div>
+                                <div class="modal-footer">
+                                    <form asp-action="Delete" class=" mt-3">
+                                        <input type="hidden" name="id" value="@passenger.Id" />
+                                        <a class="btn btn-secondary me-1" asp-action="Index">Cancel</a>
+                                        <input type="submit" value="Delete" class="btn btn-danger" />
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

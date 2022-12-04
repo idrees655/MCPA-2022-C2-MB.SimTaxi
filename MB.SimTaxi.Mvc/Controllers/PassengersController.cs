@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MB.SimTaxi.Entities;
 using MB.SimTaxi.Mvc.Data;
 using AutoMapper;
+using MB.SimTaxi.Mvc.Models.Passengers;
 
 namespace MB.SimTaxi.Mvc.Controllers
 {
@@ -25,11 +26,11 @@ namespace MB.SimTaxi.Mvc.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<Passenger> passengers = await _context.Passengers.ToListAsync();
+            var passengers = await _context.Passengers.ToListAsync();
 
+            var passengerVMs = _mapper.Map<List<PassengerViewModel>>(passengers);
 
-
-            return View(passengers);
+            return View(passengerVMs);
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -48,7 +49,9 @@ namespace MB.SimTaxi.Mvc.Controllers
                 return NotFound();
             }
 
-            return View(passenger);
+            var passengerVM = _mapper.Map<PassengerViewModel>(passenger);
+
+            return View(passengerVM);
         }
 
         public IActionResult Create()
@@ -58,15 +61,18 @@ namespace MB.SimTaxi.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Passenger passenger)
+        public async Task<IActionResult> Create(PassengerViewModel passengerVM)
         {
             if (ModelState.IsValid)
             {
+                var passenger = _mapper.Map<Passenger>(passengerVM);
+
                 _context.Add(passenger);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(passenger);
+            return View(passengerVM);
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -83,46 +89,31 @@ namespace MB.SimTaxi.Mvc.Controllers
                 return NotFound();
             }
 
-            return View(passenger);
+            var passengerVM = _mapper.Map<PassengerViewModel>(passenger);
+
+            return View(passengerVM);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Passenger passenger)
+        public async Task<IActionResult> Edit(int id, PassengerViewModel passengerVM)
         {
-            if (id != passenger.Id)
+            if (id != passengerVM.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
+                var passenger = _mapper.Map<Passenger>(passengerVM);
 
                 _context.Update(passenger);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(passenger);
-        }
-
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var passenger = await _context
-                                        .Passengers
-                                        .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (passenger == null)
-            {
-                return NotFound();
-            }
-
-            return View(passenger);
+            return View(passengerVM);
         }
 
         [HttpPost, ActionName("Delete")]
