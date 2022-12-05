@@ -24,3 +24,8 @@ body {
 .pointer {
     cursor: pointer;    
 }
+
+.select2-container--default .select2-selection--single {
+    padding: 4px 0;
+    height: 40px;
+}
