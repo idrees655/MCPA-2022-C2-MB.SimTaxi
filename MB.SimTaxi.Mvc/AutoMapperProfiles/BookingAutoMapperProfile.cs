@@ -8,7 +8,9 @@ namespace MB.SimTaxi.Mvc.AutoMapperProfiles
     {
         public BookingAutoMapperProfile()
         {
-            CreateMap<Booking, BookingViewModel>();
+            CreateMap<Booking, BookingListViewModel>();
+            CreateMap<Booking, BookingDetailsViewModel>();
+            CreateMap<Booking, BookingViewModel>().ReverseMap();
         }
     }
 }

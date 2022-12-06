@@ -1,5 +1,5 @@
 ﻿@using MB.SimTaxi.Mvc.Models.Bookings;
-@model IEnumerable<BookingViewModel>
+@model IEnumerable<BookingListViewModel>
 
 @{
     ViewData["Title"] = "Bookings";
@@ -28,12 +28,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.IsPaid)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DriverFullName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CarPlateNumber)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -54,13 +48,14 @@
                     @Html.DisplayFor(modelItem => booking.Price)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => booking.IsPaid)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => booking.DriverFullName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => booking.CarPlateNumber)
+                    @if (@booking.IsPaid)
+                    {
+                        <i class="fa-solid fa-circle-check text-success"></i>
+                    }
+                    else
+                    {
+                        <i class="fa-solid fa-circle-xmark text-danger"></i>
+                    }
                 </td>
                 <td>
                     <a class="text-info me-2 text-decoration-none" asp-action="Edit" asp-route-id="@booking.Id" title="Edit">

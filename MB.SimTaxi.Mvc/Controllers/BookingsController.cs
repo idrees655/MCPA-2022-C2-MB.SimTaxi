@@ -28,11 +28,11 @@ namespace MB.SimTaxi.Mvc.Controllers
         public async Task<IActionResult> Index()
         {
             var bookings = _context.Bookings
-                                                .Include(b => b.Car)
-                                                .Include(b => b.Driver)
-                                                .ToList();
+                                    .Include(b => b.Car)
+                                    .Include(b => b.Driver)
+                                    .ToList();
 
-            var bookingVMs = _mapper.Map<List<BookingViewModel>>(bookings);
+            var bookingVMs = _mapper.Map<List<BookingListViewModel>>(bookings);
 
             return View(bookingVMs);
         }
@@ -45,43 +45,49 @@ namespace MB.SimTaxi.Mvc.Controllers
             }
 
             var booking = await _context.Bookings
-                .Include(b => b.Car)
-                .Include(b => b.Driver)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                                        .Include(b => b.Car)
+                                        .Include(b => b.Driver)
+                                        .FirstOrDefaultAsync(m => m.Id == id);
+
             if (booking == null)
             {
                 return NotFound();
             }
 
-            return View(booking);
+            var bookingVM = _mapper.Map<BookingDetailsViewModel>(booking);
+
+            return View(bookingVM);
         }
 
         public IActionResult Create()
         {
             var bookingVM = new BookingViewModel();
 
-            bookingVM.SelectListDrivers = new SelectList(_context.Drivers, "Id", "FirstName");
-            bookingVM.SelectListCars = new SelectList(_context.Cars, "Id", "CarFullName");
-            bookingVM.MultiSelectPassengers = new MultiSelectList(_context.Passengers, "Id", "FirstName");
+            bookingVM.SelectListDrivers = new SelectList(_context.Drivers, "Id", "FullName");
+            bookingVM.SelectListCars = new SelectList(_context.Cars, "Id", "FullName");
+            bookingVM.MultiSelectPassengers = new MultiSelectList(_context.Passengers, "Id", "FullName");
 
             return View(bookingVM);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Booking booking)
+        public async Task<IActionResult> Create(BookingViewModel bookingVM)
         {
             if (ModelState.IsValid)
             {
+                var booking = _mapper.Map<Booking>(bookingVM);
                 _context.Add(booking);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Model", booking.CarId);
-            ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", booking.DriverId);
+            bookingVM.SelectListCars = new SelectList(_context.Cars, "Id", "FullName", bookingVM.CarId);
+            bookingVM.SelectListDrivers = new SelectList(_context.Drivers, "Id", "FullName", bookingVM.DriverId);
+            bookingVM.MultiSelectPassengers = new MultiSelectList(_context.Passengers, "Id", "FullName", bookingVM.PassengerIds);
 
-            return View(booking);
+            return View(bookingVM);
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -92,12 +98,16 @@ namespace MB.SimTaxi.Mvc.Controllers
             }
 
             var booking = await _context.Bookings.FindAsync(id);
+
             if (booking == null)
             {
                 return NotFound();
             }
-            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Model", booking.CarId);
-            ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", booking.DriverId);
+
+            //bookingVM.SelectListCars = new SelectList(_context.Cars, "Id", "FullName", bookingVM.CarId);
+            //bookingVM.SelectListDrivers = new SelectList(_context.Drivers, "Id", "FullName", bookingVM.DriverId);
+            //bookingVM.MultiSelectPassengers = new MultiSelectList(_context.Passengers, "Id", "FullName", bookingVM.PassengerIds);
+
             return View(booking);
         }
 
@@ -180,6 +190,7 @@ namespace MB.SimTaxi.Mvc.Controllers
         {
             return _context.Bookings.Any(e => e.Id == id);
         } 
+
         #endregion
     }
 }

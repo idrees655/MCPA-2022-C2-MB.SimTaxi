@@ -21,7 +21,7 @@ namespace MB.SimTaxi.Entities
         public List<Booking> Bookings { get; set; }
 
         [NotMapped]
-        public string CarFullName
+        public string FullName
         {
             get
             {
