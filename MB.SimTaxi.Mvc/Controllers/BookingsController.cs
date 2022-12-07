@@ -27,27 +27,28 @@ namespace MB.SimTaxi.Mvc.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var bookings = _context.Bookings
+            var bookings = await _context.Bookings
                                     .Include(b => b.Car)
                                     .Include(b => b.Driver)
-                                    .ToList();
+                                    .ToListAsync();
 
             var bookingVMs = _mapper.Map<List<BookingListViewModel>>(bookings);
 
             return View(bookingVMs);
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null || _context.Bookings == null)
             {
                 return NotFound();
             }
 
-            var booking = await _context.Bookings
-                                        .Include(b => b.Car)
-                                        .Include(b => b.Driver)
-                                        .FirstOrDefaultAsync(m => m.Id == id);
+            var booking = _context.Bookings
+                                    .Include(b => b.Car)
+                                    .Include(b => b.Driver)
+                                    .Where(booking => booking.Id == id)
+                                    .SingleOrDefault();
 
             if (booking == null)
             {
@@ -77,6 +78,17 @@ namespace MB.SimTaxi.Mvc.Controllers
             if (ModelState.IsValid)
             {
                 var booking = _mapper.Map<Booking>(bookingVM);
+
+                // Get passengers from DB using the passengerIds (List<int>)
+                var passengersFromDB = await _context
+                                            .Passengers
+                                            .Where(passenger => bookingVM.PassengerIds.Contains(passenger.Id)) // id: 1,2
+                                            .ToListAsync(); // Thre result is: Sameer,Natasha
+
+                // Add passengers(List<Passenger>) to booking
+                booking.Passengers.AddRange(passengersFromDB);    
+
+
                 _context.Add(booking);
                 await _context.SaveChangesAsync();
 

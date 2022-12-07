@@ -27,10 +27,10 @@ namespace MB.SimTaxi.Mvc.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<Car> cars = _context
+            List<Car> cars = await _context
                                 .Cars
                                 .Include(car => car.Driver)
-                                .ToList();
+                                .ToListAsync();
 
             List<CarTableDetailsViewModel> carVMs = _mapper.Map<List<CarTableDetailsViewModel>>(cars);
 
