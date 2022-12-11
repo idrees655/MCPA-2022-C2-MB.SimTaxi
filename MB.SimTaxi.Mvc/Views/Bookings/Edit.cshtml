@@ -1,61 +1,74 @@
-﻿@model MB.SimTaxi.Entities.Booking
+﻿@using MB.SimTaxi.Mvc.Models.Bookings;
+@model BookingViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Booking";
 }
 
-<h1>Edit</h1>
-
-<h4>Booking</h4>
+<h4>Edit Booking: <span class="text-primary">@Model.Id - @Model.FromAddress - @Model.ToAddress</span></h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+
+<form asp-action="Edit">
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="row">
+        <div class="col-md-6">
             <div class="form-group">
                 <label asp-for="FromAddress" class="control-label"></label>
                 <input asp-for="FromAddress" class="form-control" />
                 <span asp-validation-for="FromAddress" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <div class="form-group mt-3">
                 <label asp-for="ToAddress" class="control-label"></label>
                 <input asp-for="ToAddress" class="form-control" />
                 <span asp-validation-for="ToAddress" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <div class="form-group mt-3">
                 <label asp-for="PickupTime" class="control-label"></label>
                 <input asp-for="PickupTime" class="form-control" />
                 <span asp-validation-for="PickupTime" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <div class="form-group mt-3">
+                <label asp-for="DriverId" class="control-label">Driver</label>
+                <select asp-for="DriverId" class="form-control select2" asp-items="@Model.SelectListDrivers"></select>
+            </div>
+
+            <div class="form-group mt-3">
+                <label class="control-label">Car</label>
+                <select asp-for="CarId" class="form-control select2" asp-items="@Model.SelectListCars"></select>
+            </div>
+
+            <div class="form-group mt-3">
                 <label asp-for="Price" class="control-label"></label>
                 <input asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
+
+            <div class="form-group form-check mt-3">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsPaid" /> @Html.DisplayNameFor(model => model.IsPaid)
                 </label>
             </div>
-            <div class="form-group">
-                <label asp-for="DriverId" class="control-label"></label>
-                <select asp-for="DriverId" class="form-control" asp-items="ViewBag.DriverId"></select>
-                <span asp-validation-for="DriverId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CarId" class="control-label"></label>
-                <select asp-for="CarId" class="form-control" asp-items="ViewBag.CarId"></select>
-                <span asp-validation-for="CarId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+        </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+        <div class="col-md-6">
+
+            <div class="form-group">
+                <label asp-for="PassengerIds" class="control-label">Passengers</label>
+                <select asp-for="PassengerIds" class="form-control" asp-items="@Model.MultiSelectPassengers"></select>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="form-group mt-4">
+        <a class="btn btn-secondary me-1" asp-action="Index">Cancel</a>
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+
+</form>
 

@@ -110,25 +110,35 @@ namespace MB.SimTaxi.Mvc.Controllers
                 return NotFound();
             }
 
-            var booking = await _context.Bookings.FindAsync(id);
+            var booking = await _context
+                                    .Bookings
+                                    .Include(b => b.Car)
+                                    .Include(b => b.Driver)
+                                    .Include(b => b.Passengers)
+                                    .Where(b => b.Id == id)
+                                    .SingleOrDefaultAsync();
 
             if (booking == null)
             {
                 return NotFound();
             }
 
-            //bookingVM.SelectListCars = new SelectList(_context.Cars, "Id", "FullName", bookingVM.CarId);
-            //bookingVM.SelectListDrivers = new SelectList(_context.Drivers, "Id", "FullName", bookingVM.DriverId);
-            //bookingVM.MultiSelectPassengers = new MultiSelectList(_context.Passengers, "Id", "FullName", bookingVM.PassengerIds);
+            var bookingVM = _mapper.Map<BookingViewModel>(booking);
 
-            return View(booking);
+            bookingVM.SelectListCars = new SelectList(_context.Cars, "Id", "FullName", bookingVM.CarId);
+            bookingVM.SelectListDrivers = new SelectList(_context.Drivers, "Id", "FullName", bookingVM.DriverId);
+            bookingVM.MultiSelectPassengers = new MultiSelectList(_context.Passengers, "Id", "FullName", bookingVM.PassengerIds);
+
+            bookingVM.PassengerIds = booking.Passengers.Select(p => p.Id).ToList();
+
+            return View(bookingVM);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Booking booking)
+        public async Task<IActionResult> Edit(int id, BookingViewModel bookingVM)
         {
-            if (id != booking.Id)
+            if (id != bookingVM.Id)
             {
                 return NotFound();
             }
@@ -137,12 +147,20 @@ namespace MB.SimTaxi.Mvc.Controllers
             {
                 try
                 {
+                    var booking = _mapper.Map<Booking>(bookingVM);
+
+                    // TODO Update passengers
+                    // Load passengers from DB using PassengerIds
+                    // Clear passengers
+                    // Add loaded passengers to Booking.Passegners
+                    // Save
+
                     _context.Update(booking);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BookingExists(booking.Id))
+                    if (!BookingExists(bookingVM.Id))
                     {
                         return NotFound();
                     }
@@ -153,9 +171,12 @@ namespace MB.SimTaxi.Mvc.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Model", booking.CarId);
-            ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "FirstName", booking.DriverId);
-            return View(booking);
+
+            bookingVM.SelectListCars = new SelectList(_context.Cars, "Id", "FullName", bookingVM.CarId);
+            bookingVM.SelectListDrivers = new SelectList(_context.Drivers, "Id", "FullName", bookingVM.DriverId);
+            bookingVM.MultiSelectPassengers = new MultiSelectList(_context.Passengers, "Id", "FullName", bookingVM.PassengerIds);
+
+            return View(bookingVM);
         }
 
         public async Task<IActionResult> Delete(int? id)
