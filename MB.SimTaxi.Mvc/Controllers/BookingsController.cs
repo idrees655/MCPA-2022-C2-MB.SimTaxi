@@ -47,6 +47,7 @@ namespace MB.SimTaxi.Mvc.Controllers
             var booking = _context.Bookings
                                     .Include(b => b.Car)
                                     .Include(b => b.Driver)
+                                    .Include(b => b.Passengers)
                                     .Where(booking => booking.Id == id)
                                     .SingleOrDefault();
 

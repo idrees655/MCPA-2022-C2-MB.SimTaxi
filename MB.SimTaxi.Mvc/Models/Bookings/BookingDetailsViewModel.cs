@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MB.SimTaxi.Mvc.Models.Passengers;
+using System.ComponentModel.DataAnnotations;
 
 namespace MB.SimTaxi.Mvc.Models.Bookings
 {
@@ -31,5 +32,7 @@ namespace MB.SimTaxi.Mvc.Models.Bookings
 
         [Display(Name = "Car Plate Number")]
         public string CarPlateNumber { get; set; }
+
+        public List<PassengerInfoViewModel> Passengers { get; set; }
     }
 }
