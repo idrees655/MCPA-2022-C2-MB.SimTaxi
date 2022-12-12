@@ -80,15 +80,7 @@ namespace MB.SimTaxi.Mvc.Controllers
             {
                 var booking = _mapper.Map<Booking>(bookingVM);
 
-                // Get passengers from DB using the passengerIds (List<int>)
-                var passengersFromDB = await _context
-                                            .Passengers
-                                            .Where(passenger => bookingVM.PassengerIds.Contains(passenger.Id)) // id: 1,2
-                                            .ToListAsync(); // Thre result is: Sameer,Natasha
-
-                // Add passengers(List<Passenger>) to booking
-                booking.Passengers.AddRange(passengersFromDB);    
-
+                await AddPassengersToBooking(bookingVM, booking);
 
                 _context.Add(booking);
                 await _context.SaveChangesAsync();
@@ -149,13 +141,11 @@ namespace MB.SimTaxi.Mvc.Controllers
                 {
                     var booking = _mapper.Map<Booking>(bookingVM);
 
-                    // TODO Update passengers
-                    // Load passengers from DB using PassengerIds
-                    // Clear passengers
-                    // Add loaded passengers to Booking.Passegners
-                    // Save
-
                     _context.Update(booking);
+                    await _context.SaveChangesAsync();
+
+                    await UpdateBookingPassengers(bookingVM.PassengerIds, bookingVM.Id);
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -211,7 +201,7 @@ namespace MB.SimTaxi.Mvc.Controllers
             {
                 _context.Bookings.Remove(booking);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -223,7 +213,40 @@ namespace MB.SimTaxi.Mvc.Controllers
         private bool BookingExists(int id)
         {
             return _context.Bookings.Any(e => e.Id == id);
-        } 
+        }
+
+        private async Task AddPassengersToBooking(BookingViewModel bookingVM, Booking booking)
+        {
+            // Get passengers from DB using the passengerIds (List<int>)
+            var passengersFromDB = await _context
+                                        .Passengers
+                                        .Where(passenger => bookingVM.PassengerIds.Contains(passenger.Id)) // id: 1,2
+                                        .ToListAsync(); // Thre result is: Sameer,Natasha
+
+            // Add passengers(List<Passenger>) to booking
+            booking.Passengers.AddRange(passengersFromDB);
+        }
+
+        private async Task UpdateBookingPassengers(List<int> passengerIds, int bookingId)
+        {
+            // Load booking including passengers
+            var booking = await _context.Bookings
+                                        .Include(b => b.Passengers)
+                                        .Where(booking => booking.Id == bookingId)
+                                        .SingleAsync();
+
+            // Clear passengers
+            booking.Passengers.Clear();
+
+            // Get passengers from DB using the passengerIds (List<int>)
+            var passengersFromDB = await _context
+                                        .Passengers
+                                        .Where(passenger => passengerIds.Contains(passenger.Id)) // id: 1,2
+                                        .ToListAsync(); // Thre result is: Sameer,Natasha
+
+            // Add passengers(List<Passenger>) to booking
+            booking.Passengers.AddRange(passengersFromDB);
+        }
 
         #endregion
     }
