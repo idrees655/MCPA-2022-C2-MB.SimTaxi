@@ -14,5 +14,14 @@ namespace MB.SimTaxi.Mvc.Data
             : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Car>()
+                    .HasIndex(car => car.PlateNumber)
+                    .IsUnique();
+
+            base.OnModelCreating(builder);
+        }
     }
 }
