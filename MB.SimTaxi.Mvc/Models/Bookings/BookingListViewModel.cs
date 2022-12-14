@@ -21,5 +21,8 @@ namespace MB.SimTaxi.Mvc.Models.Bookings
 
         [Display(Name = "Paid")]
         public bool IsPaid { get; set; }
+
+        [Display(Name = "Booked By")]
+        public string BookedByEmail { get; set; }
     }
 }

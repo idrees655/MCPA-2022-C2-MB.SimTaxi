@@ -34,5 +34,8 @@ namespace MB.SimTaxi.Mvc.Models.Bookings
         public string CarPlateNumber { get; set; }
 
         public List<PassengerInfoViewModel> Passengers { get; set; }
+
+        [Display(Name = "Booked By")]
+        public string BookedByEmail { get; set; }
     }
 }

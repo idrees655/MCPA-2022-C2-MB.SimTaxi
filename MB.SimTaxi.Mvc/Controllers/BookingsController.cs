@@ -5,9 +5,11 @@ using MB.SimTaxi.Entities;
 using MB.SimTaxi.Mvc.Data;
 using AutoMapper;
 using MB.SimTaxi.Mvc.Models.Bookings;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MB.SimTaxi.Mvc.Controllers
 {
+    [Authorize]
     public class BookingsController : Controller
     {
         #region Data and Constructors
@@ -79,6 +81,8 @@ namespace MB.SimTaxi.Mvc.Controllers
             if (ModelState.IsValid)
             {
                 var booking = _mapper.Map<Booking>(bookingVM);
+
+                booking.BookedByEmail = User.Identity.Name;
 
                 await AddPassengersToBooking(bookingVM, booking);
 
@@ -212,7 +216,7 @@ namespace MB.SimTaxi.Mvc.Controllers
 
         private bool BookingExists(int id)
         {
-            return _context.Bookings.Any(e => e.Id == id);
+           return _context.Bookings.Any(booking => booking.Id == id); // 17 == 17: true
         }
 
         private async Task AddPassengersToBooking(BookingViewModel bookingVM, Booking booking)

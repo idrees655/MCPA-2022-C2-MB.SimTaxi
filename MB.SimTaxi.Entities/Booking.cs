@@ -24,6 +24,8 @@ namespace MB.SimTaxi.Entities
         public int? CarId { get; set; }
         public Car? Car { get; set; }
 
+        public string BookedByEmail { get; set; }
+
         public List<Passenger> Passengers { get; set; }
     }
 }
