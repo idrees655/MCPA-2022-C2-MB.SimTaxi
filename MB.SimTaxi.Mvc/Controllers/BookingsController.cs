@@ -90,6 +90,7 @@ namespace MB.SimTaxi.Mvc.Controllers
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
+                //return RedirectToAction("Index","Home");
             }
 
             bookingVM.SelectListCars = new SelectList(_context.Cars, "Id", "FullName", bookingVM.CarId);
