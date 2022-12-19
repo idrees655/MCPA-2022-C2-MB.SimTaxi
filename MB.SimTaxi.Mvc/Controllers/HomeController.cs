@@ -18,6 +18,16 @@ namespace MB.SimTaxi.Mvc.Controllers
             return View();
         }
 
+        public IActionResult GreenPage()
+        {
+            return View();
+        }
+
+        public IActionResult BluePage()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
